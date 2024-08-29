@@ -9,8 +9,20 @@ export const publishMessage = async (req: Request, res: Response) => {
 
 export const subscribeToChannel = (req: Request, res: Response) => {
   const { channel } = req.params;
-  receiveMessage(channel, (message) => {
-    console.log(`Received message from ${channel}: ${message}`);
+
+  res.set({
+    "Access-Control-Allow-Origin": "http://127.0.0.1:5500",
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
   });
-  res.status(200).send(`Subscribed to channel ${channel}`);
+
+  receiveMessage(channel, (message: any) => {
+    res.write(`data: ${message}\n\n`);
+  });
+
+  req.on("close", () => {
+    console.log(`Client closed connection for channel ${channel}`);
+    res.end();
+  });
 };
