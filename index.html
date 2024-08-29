@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SSE Example</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f0f4f8;
+      }
+    </style>
+  </head>
+  <body
+    class="flex flex-col items-center justify-center min-h-screen p-6 bg-blue-50"
+  >
+    <h1 class="text-3xl font-bold text-blue-900 mb-4">Messages</h1>
+    <ul
+      id="messages"
+      class="w-full max-w-lg bg-white shadow-lg rounded-lg p-4 space-y-4"
+    ></ul>
+
+    <script>
+      const eventSource = new EventSource(
+        "http://localhost:4000/messages/subscribe/test-channel"
+      );
+
+      eventSource.onmessage = function (event) {
+        const newElement = document.createElement("li");
+        newElement.classList.add(
+          "bg-blue-100",
+          "border",
+          "border-blue-200",
+          "rounded",
+          "p-3",
+          "text-blue-800",
+          "font-medium"
+        );
+        newElement.textContent = event.data;
+        document.getElementById("messages").appendChild(newElement);
+      };
+    </script>
+  </body>
+</html>
