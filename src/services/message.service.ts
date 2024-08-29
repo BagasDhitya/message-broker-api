@@ -1,23 +1,30 @@
 import { createClient } from "redis";
 
-const client = createClient();
+const pubClient = createClient(); // For publishing messages
+const subClient = createClient(); // For subscribing to messages
 
-client.on("error", (err) => console.error("Redis Client Error", err));
+pubClient.on("error", (err) =>
+  console.error("Redis Publish Client Error", err)
+);
+subClient.on("error", (err) =>
+  console.error("Redis Subscribe Client Error", err)
+);
 
-client.connect();
+pubClient.connect();
+subClient.connect();
 
 export const sendMessage = async (
   channel: string,
   message: string
 ): Promise<void> => {
-  await client.publish(channel, message);
+  await pubClient.publish(channel, message);
 };
 
 export const receiveMessage = (
   channel: string,
   callback: (message: string) => void
 ): void => {
-  client.subscribe(channel, (message) => {
+  subClient.subscribe(channel, (message) => {
     callback(message);
   });
 };
