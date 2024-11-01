@@ -30,6 +30,7 @@ export const sendMessage = async (
   }
 
   console.log(`Publishing message: "${message}" to channel: "${channel}"`);
+
   await pubClient.publish(channel, message);
 };
 
