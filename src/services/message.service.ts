@@ -37,7 +37,9 @@ export const receiveMessage = (
   channel: string,
   callback: (message: string) => void
 ): void => {
+  console.log(`Subscribing to channel: "${channel}"`);
   subClient.subscribe(channel, (message) => {
+    console.log(`Received message from channel "${channel}": ${message}`);
     callback(message);
   });
 };

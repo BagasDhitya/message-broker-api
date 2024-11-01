@@ -17,12 +17,16 @@ export const subscribeToChannel = (req: Request, res: Response) => {
     Connection: "keep-alive",
   });
 
-  receiveMessage(channel, (message: any) => {
-    res.write(`data: ${message}\n\n`);
-  });
+  try {
+    receiveMessage(channel, (message: any) => {
+      res.write(`data: ${message}\n\n`);
+    });
+  } catch (error) {
+    console.log("error : ", error);
+  }
 
-  req.on("close", () => {
-    console.log(`Client closed connection for channel ${channel}`);
-    res.end();
-  });
+  // req.on("close", () => {
+  //   console.log(`Client closed connection for channel ${channel}`);
+  //   res.end();
+  // });
 };
